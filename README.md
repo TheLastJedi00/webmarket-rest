@@ -8,16 +8,23 @@ Este é o backend de uma aplicação web para um **brechó online**. A API está
 
 ## 🚀 Como rodar o projeto localmente
 
-Siga os passos abaixo para configurar o ambiente e iniciar o servidor local usando `uvicorn`.
+Você pode rodar o projeto de duas formas:
 
-### 1. Clone o repositório
+- [x] Usando ambiente virtual (`.venv`) + Uvicorn  
+- [x] Usando Docker Compose
+
+---
+
+### 🐍 Opção 1 – Usando ambiente virtual e Uvicorn
+
+#### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/TheLastJedi00/webmarket-rest.git
+git clone https://github.com/seu-usuario/seu-repositorio.git
 cd seu-repositorio
 ```
 
-### 2. Crie e ative um ambiente virtual
+#### 2. Crie e ative um ambiente virtual
 
 ```bash
 # Crie o ambiente virtual
@@ -32,20 +39,36 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Instale as dependências
+#### 3. Instale as dependências
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Rode o servidor com Uvicorn
+#### 4. Rode o servidor com Uvicorn
 
 ```bash
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
 
-> Aqui, `main.py` deve ser o arquivo onde sua instância do FastAPI (`app = FastAPI()`) está definida.  
-> O `--reload` faz com que o servidor reinicie automaticamente ao detectar mudanças no código – útil para desenvolvimento.
+> Certifique-se de que o `app = FastAPI()` está no arquivo `main.py` dentro da pasta `app`.
+
+---
+
+### 🐳 Opção 2 – Usando Docker Compose
+
+Certifique-se de ter o **Docker** e o **Docker Compose** instalados.  
+Para subir o projeto com Docker, basta rodar:
+
+```bash
+docker compose up --build
+```
+
+Isso irá:
+
+- Criar a imagem da aplicação com base no `Dockerfile`,
+- Subir o container com a API rodando no ambiente correto,
+- Expor a API (geralmente na porta `8008`).
 
 ---
 
