@@ -1,0 +1,29 @@
+name: webmarket-rest
+services:
+    app:
+        build: .
+        cpus: 0.8
+        restart: always
+        container_name: webmarket-rest
+        networks:
+            - webmarket-rest
+        ports:
+            - 8008:8000
+        environment:
+            - TZ=America/Sao_Paulo
+            - LANG=pt_BR.UTF-8
+            - LANGUAGE=pt_BR.UTF-8
+        env_file:
+            - ./.env
+        hostname: webmarket-rest
+        command: sh -c "uvicorn main:app --host 0.0.0.0 --port 8000 --timeout-keep-alive 1200"
+        healthcheck:
+            test: [ "CMD", "ping", "-c", "1", "localhost" ]
+            interval: 30s
+            start_period: 10s
+            timeout: 10s
+            retries: 5
+
+networks:
+    webmarket-rest:
+        name: webmarket-rest
