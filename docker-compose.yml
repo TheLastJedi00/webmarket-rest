@@ -1,29 +1,49 @@
-name: webmarket-rest
 services:
+    db:
+        image: mysql:8
+        container_name: webmarket-db
+        restart: always
+        networks:
+            - webmarket-rest
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DB}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            TZ: America/Sao_Paulo
+        ports:
+            - 3307:3306
+        volumes:
+            - db_data:/var/lib/mysql
+
     app:
         build: .
-        cpus: 0.8
-        restart: always
         container_name: webmarket-rest
+        restart: always
         networks:
             - webmarket-rest
         ports:
             - 8008:8000
-        environment:
-            - TZ=America/Sao_Paulo
-            - LANG=pt_BR.UTF-8
-            - LANGUAGE=pt_BR.UTF-8
         env_file:
             - ./.env
-        hostname: webmarket-rest
-        command: sh -c "uvicorn main:app --host 0.0.0.0 --port 8000 --timeout-keep-alive 1200"
-        healthcheck:
-            test: [ "CMD", "ping", "-c", "1", "localhost" ]
-            interval: 30s
-            start_period: 10s
-            timeout: 10s
-            retries: 5
+        command: sh -c "uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+        depends_on:
+            - db
+
+    migrate:
+        build: .
+        container_name: webmarket-migrate
+        networks:
+            - webmarket-rest
+        env_file:
+            - ./.env
+        command: alembic upgrade head
+        depends_on:
+            - db
 
 networks:
     webmarket-rest:
         name: webmarket-rest
+
+volumes:
+    db_data:
